@@ -1,0 +1,57 @@
+.footer{
+  background: #060606;
+  padding-top: 0;
+}
+.sizzle{
+  height: 4px;
+  background: repeating-linear-gradient(90deg, #f0b429 0 18px, transparent 18px 26px);
+}
+.grid{
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 48px 24px 24px;
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 24px;
+}
+.wordmark{
+  font-family: Georgia, serif;
+  font-weight: 800;
+  font-style: italic;
+  font-size: 1.4rem;
+  color: #fff;
+}
+.tag{
+  color: #f0b429;
+  font-size: .8rem;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  margin-top: 6px;
+}
+.heading{
+  color: #f0b429;
+  font-size: .75rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+.grid p{
+  color: #cbbfae;
+  font-size: .88rem;
+  line-height: 1.6;
+  margin: 0;
+}
+.bottom{
+  text-align:center;
+  color: #6b5544;
+  font-size: .75rem;
+  padding: 18px 24px 28px;
+  border-top: 1px solid rgba(255,255,255,.06);
+  max-width: 1180px;
+  margin: 0 auto;
+}
+
+@media (max-width: 640px){
+  .grid{ grid-template-columns: 1fr; }
+}
