@@ -1,0 +1,18 @@
+.banner{
+  max-width: 1400px;
+  margin: 24px auto 4px;
+  padding: 0 20px;
+}
+.bannerImg{
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 14px;
+  box-shadow: 0 16px 40px rgba(0,0,0,.4);
+  border: 1px solid rgba(240,180,41,.2);
+}
+
+@media (max-width: 560px){
+  .banner{ margin: 12px auto 2px; padding: 0 12px; }
+  .bannerImg{ border-radius: 10px; }
+}
