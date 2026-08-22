@@ -43,7 +43,9 @@ export function CartProvider({ children }: { children: ReactNode }) {
       }
       return [...prev, { ...line, quantity: 1 }];
     });
-    setOpen(true); // auto-open the cart the moment something is added
+    // Never auto-open the cart — the person keeps browsing/adding dishes,
+    // and only sees the cart when they deliberately tap the cart button
+    // to review their order and check out.
   }
 
   function updateQty(key: string, qty: number) {

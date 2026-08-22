@@ -1,0 +1,70 @@
+.header{
+  background: #000;
+  padding: 0;
+  border-bottom: 3px solid rgba(240,180,41,.4);
+}
+
+.brandRow{
+  position: relative;
+  max-width: 1180px;
+  margin: 0 auto;
+  height: 110px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding: 0 60px 0 12px; /* right padding clears the cart button */
+}
+
+.bannerFrame{
+  position: relative;
+  width: 100%;
+  max-width: 560px;
+  height: 100%;
+}
+
+.bannerImg{
+  object-fit: contain;
+  object-position: center;
+}
+
+@media (max-width: 480px){
+  .cartBtn{ width: 38px; height: 38px; right: 10px; font-size: 1.05rem; }
+}
+
+.cartBtn{
+  position: absolute;
+  top: 50%;
+  right: 16px;
+  transform: translateY(-50%);
+  background: rgba(0,0,0,.5);
+  border: 1px solid rgba(255,255,255,.2);
+  border-radius: 14px;
+  width: 46px;
+  height: 46px;
+  font-size: 1.25rem;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  cursor: pointer;
+}
+.badge{
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  background: #4caf50;
+  color: #fff;
+  font-size: .72rem;
+  font-weight: 800;
+  min-width: 20px;
+  height: 20px;
+  border-radius: 999px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding: 0 4px;
+  border: 2px solid #0a1a10;
+}
+
+@media (max-width: 480px){
+  .brandRow{ height: 82px; padding: 0 52px 0 8px; }
+}
