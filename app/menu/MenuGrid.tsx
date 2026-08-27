@@ -1,12 +1,64 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { Section } from "../../lib/menu-data";
 import { parseVariants } from "../../lib/parse-variants";
 import { useCart } from "../../lib/cart-context";
 import styles from "./MenuGrid.module.css";
 
-// Cycled placeholder gradients until real dish photos are wired in from Supabase.
+// Real dish photos, keyed by the item's base name (name with any
+// "(Small/Medium/Large)" etc. suffix stripped). Add new entries here as
+// more photos come in — anything without an entry falls back to a
+// placeholder tile.
+const IMAGES: Record<string, string> = {
+  "Chilli Chicken": "/menu-images/chilli_chicken.jpg",
+  "Chicken 65": "/menu-images/chicken_65.jpg",
+  "Chicken Majestic": "/menu-images/food_majestic.jpg",
+  "Chapli Kabab": "/menu-images/chapli_kabab.jpg",
+  "Green Chicken Tikka Breast": "/menu-images/green_chicken_tikka_breast.jpg",
+  "Chicken Chatkhara Roll": "/menu-images/chicken_chatkhara_roll.jpg",
+  "Boti Shangrila": "/menu-images/kebab_shboti1.jpg",
+  "Mixed BBQ Platter": "/menu-images/mixed_bbq_platter.jpg",
+  "Malai Boti Platter": "/menu-images/food_mb.jpg",
+  "Chicken Boti Kabab": "/menu-images/chicken_boti_kabab.jpg",
+  "Chicken Reshmi Kebab": "/menu-images/food_rs.jpg",
+  "Mutton Karahi Shinwari": "/menu-images/mutton_karahi_shinwari.jpg",
+  "Chicken Karahi Shinwari": "/menu-images/chicken_karahi_shinwari.jpg",
+  "Chicken Masala": "/menu-images/chicken_masala.jpg",
+  "Mutton Masala": "/menu-images/mutton_masala.jpg",
+  "Paneer Butter Masala": "/menu-images/paneer_butter_masala.jpg",
+  "Dum Biryani": "/menu-images/dum_biryani.jpg",
+  "Hyderabadi Chicken Dum Biryani": "/menu-images/hyderabadi_chicken_dum_biryani.jpg",
+  "Chicken Tikka Biryani": "/menu-images/chicken_tikka_biryani.jpg",
+  "Bun Kabab": "/menu-images/bun_kabab.jpg",
+  "Chicken Burger": "/menu-images/chicken_burger.jpg",
+  "Chicken Juicy Lucy Cheese Burger": "/menu-images/chicken_juicy_lucy_cheese_burger.jpg",
+  "Grilled Chicken Sandwich": "/menu-images/sandwich_chckn_sandwih.jpg",
+  "BBQ Malai Sandwich": "/menu-images/bbq_malai_sandwich.jpg",
+  "BBQ Reshmi Sandwich": "/menu-images/bbq_reshmi_sandwich.jpg",
+  "BBQ Bihari Sandwich": "/menu-images/bbq_bihari_sandwich.jpg",
+  "Chapli Sandwich": "/menu-images/sandwich_chapli_sandwich.jpg",
+  "Malai Boti Sandwich": "/menu-images/sandwich_malaiboti_sandwch.jpg",
+  "Rumali Roti": "/menu-images/rumali_roti.jpg",
+  "Water": "/menu-images/water.jpg",
+  "Soft Drinks": "/menu-images/drink.jpg",
+  "Lemon Fresh": "/menu-images/lemon_fresh.jpg",
+  "Falooda Special": "/menu-images/falooda_special.jpg",
+  "Falooda Kulfi": "/menu-images/falooda_kulfi.jpg",
+  "Lemonade Mint": "/menu-images/lemonade_mint.jpg",
+  "Orange Juice": "/menu-images/orange_juice.jpg",
+  "Pakola": "/menu-images/food_pkla.jpg",
+  "Fries Mayonnaise Garlic Spicy": "/menu-images/fries_mayonnaise_garlic_spicy.jpg",
+  "Vegetarian": "/menu-images/vegetarian_pizza.jpg",
+  "Cheesy": "/menu-images/cheese_pizza.jpg",
+  "Kebab Bihari Chicken": "/menu-images/kebab_bihari_chicken_pizza.jpg",
+  "Kebab Seekh Beef": "/menu-images/kebab_seekh_beef_pizza.jpg",
+  "Boti Bihari Beef": "/menu-images/boti_bihari_beef_pizza.jpg",
+  "Cheese Crust Pizza": "/menu-images/cheese_crust_pizza.jpg",
+};
+
+// Cycled placeholder gradients for items without a photo yet.
 const GRADIENTS = [
   "linear-gradient(135deg, #78090f, #3a0a0a)",
   "linear-gradient(135deg, #0a3219, #0a1a10)",
@@ -47,20 +99,32 @@ export default function MenuGrid({ menu }: { menu: Section[] }) {
         {visibleSections.map((section, sIdx) =>
           section.items.map(([en, ar, price, cal], iIdx) => {
             const { baseName, variants } = parseVariants(en, price);
-            if (variants.length === 0) return null;
-
+            const photo = IMAGES[baseName];
             const gradient = GRADIENTS[(sIdx + iIdx) % GRADIENTS.length];
             const cardKey = `${section.cat}__${baseName}`;
+            const hasVariants = variants.length > 0;
             const hasMultipleVariants = variants.length > 1;
-            const displayPrice = hasMultipleVariants
-              ? `SAR ${Math.min(...variants.map((v) => v.price))}–${Math.max(...variants.map((v) => v.price))}`
+            const displayPrice = !hasVariants
+              ? "Price TBD"
+              : hasMultipleVariants
+              ? variants.map((v) => `${(v.label ?? "").charAt(0)}=${v.price}`).join(", ")
               : `SAR ${variants[0].price}`;
 
             return (
               <div key={cardKey} className={styles.card}>
-                <div className={styles.imgWrap} style={{ background: gradient }}>
+                <div className={styles.imgWrap} style={!photo ? { background: gradient } : undefined}>
                   <span className={styles.tag}>{section.cat}</span>
-                  <span className={styles.emoji}>{section.icon}</span>
+                  {photo ? (
+                    <Image
+                      src={photo}
+                      alt={baseName}
+                      fill
+                      sizes="(max-width: 640px) 50vw, (max-width: 960px) 33vw, 25vw"
+                      className={styles.photo}
+                    />
+                  ) : (
+                    <span className={styles.emoji}>{section.icon}</span>
+                  )}
                 </div>
 
                 <div className={styles.info}>
@@ -70,7 +134,11 @@ export default function MenuGrid({ menu }: { menu: Section[] }) {
                   <div className={styles.bottomRow}>
                     <span className={styles.price}>{displayPrice}</span>
 
-                    {hasMultipleVariants ? (
+                    {!hasVariants ? (
+                      <button className={styles.plusBtn} disabled style={{ opacity: 0.35, cursor: "not-allowed" }}>
+                        +
+                      </button>
+                    ) : hasMultipleVariants ? (
                       <button
                         className={styles.plusBtn}
                         onClick={() =>
