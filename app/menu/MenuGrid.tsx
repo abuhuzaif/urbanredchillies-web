@@ -50,11 +50,11 @@ const IMAGES: Record<string, string> = {
   "Orange Juice": "/menu-images/orange_juice.jpg",
   "Pakola": "/menu-images/food_pkla.jpg",
   "Fries Mayonnaise Garlic Spicy": "/menu-images/fries_mayonnaise_garlic_spicy.jpg",
-  "Vegetarian": "/menu-images/vegetarian_pizza.jpg",
-  "Cheesy": "/menu-images/cheese_pizza.jpg",
-  "Kebab Bihari Chicken": "/menu-images/kebab_bihari_chicken_pizza.jpg",
-  "Kebab Seekh Beef": "/menu-images/kebab_seekh_beef_pizza.jpg",
-  "Boti Bihari Beef": "/menu-images/boti_bihari_beef_pizza.jpg",
+  "Vegetarian Pizza": "/menu-images/vegetarian_pizza.jpg",
+  "Cheesy Pizza": "/menu-images/cheese_pizza.jpg",
+  "Kebab Bihari Chicken Pizza": "/menu-images/kebab_bihari_chicken_pizza.jpg",
+  "Kebab Seekh Beef Pizza": "/menu-images/kebab_seekh_beef_pizza.jpg",
+  "Boti Bihari Beef Pizza": "/menu-images/boti_bihari_beef_pizza.jpg",
   "Cheese Crust Pizza": "/menu-images/cheese_crust_pizza.jpg",
 };
 

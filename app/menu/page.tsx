@@ -5,7 +5,7 @@ import MenuGrid from "./MenuGrid";
 import CartDrawer from "./CartDrawer";
 import styles from "./menu.module.css";
 
-export const metadata = { title: "Menu | Urban Red Chillies" };
+export const metadata = { title: "RedChillies Menu" };
 
 export default function MenuPage() {
   return (
