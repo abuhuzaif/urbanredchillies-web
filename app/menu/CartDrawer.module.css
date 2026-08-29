@@ -272,3 +272,21 @@
   letter-spacing: .3px;
   margin: 0;
 }
+
+.thankYou{
+  text-align: center;
+  margin-top: 4px;
+}
+.thankYouMain{
+  color: #f0b429;
+  font-weight: 700;
+  font-size: .82rem;
+  font-style: italic;
+  margin: 0 0 4px;
+}
+.thankYouUrdu{
+  color: #cbbfae;
+  font-size: .82rem;
+  direction: rtl;
+  margin: 0;
+}

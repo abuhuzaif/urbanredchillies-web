@@ -166,6 +166,13 @@ export default function CartDrawer() {
                     <img src={invoice.qrDataUrl} alt="ZATCA simplified tax invoice QR" />
                     <p>Simplified Tax Invoice &middot; VAT {SELLER_VAT_NUMBER}</p>
                   </div>
+
+                  <div className={styles.receiptDash} />
+
+                  <div className={styles.thankYou}>
+                    <p className={styles.thankYouMain}>Enjoy Your Food &amp; Please Visit Again</p>
+                    <p className={styles.thankYouUrdu}>براے مہربانی نعمت کی قدر کیجیے</p>
+                  </div>
                 </div>
 
                 <button className={styles.doneBtn} onClick={closeAndReset}>Done</button>
