@@ -3,10 +3,10 @@ export type Section = { cat: string; icon: string; items: Item[] };
 
 export const MENU: Section[] = [
   { cat: "Appetizers", icon: "🍟", items: [
-    ["Chicken 65", "", 22, null],
-    ["Chilli Chicken", "", 22, null],
-    ["Chicken Majestic", "", 22, 350],
-    ["Chapli Kabab", "", null, null],
+    ["Chicken 65", "دجاج 65", 22, null],
+    ["Chilli Chicken", "دجاج بالفلفل الحار", 22, null],
+    ["Chicken Majestic", "دجاج ماجستيك", 22, 350],
+    ["Chapli Kabab", "كباب تشابلي", null, null],
   ]},
   { cat: "Barbeque", icon: "🔥", items: [
     ["Chicken Tikka Leg", "ساق دجاج تكا", 15, 400],
@@ -26,8 +26,8 @@ export const MENU: Section[] = [
     ["Boti Namken", "بوتي نامكين", 34, 450],
     ["Boti Shangrila", "بوتي شانغريال", 34, 450],
     ["Mixed BBQ Platter", "طبق مشاوي مشكل", 90, 950],
-    ["Malai Boti Platter", "", 34, null],
-    ["Chicken Boti Kabab", "", 34, null],
+    ["Malai Boti Platter", "طبق بوتي مالاي", 34, null],
+    ["Chicken Boti Kabab", "كباب بوتي دجاج", 34, null],
   ]},
   { cat: "Shinwari Karahi", icon: "🍲", items: [
     ["Chicken Karahi Shinwari (Half/Full)", "شنواري دجاج كراهي", "45/75", 450],
@@ -39,14 +39,14 @@ export const MENU: Section[] = [
     ["Nihari Sada (Single/Double)", "نهاري سادة", "20/35", 400],
   ]},
   { cat: "Curries", icon: "🍛", items: [
-    ["Chicken Masala", "", 36, null],
-    ["Mutton Masala", "", 33, null],
-    ["Paneer Butter Masala", "", 34, null],
+    ["Chicken Masala", "دجاج ماسالا", 36, null],
+    ["Mutton Masala", "لحم ضأن ماسالا", 33, null],
+    ["Paneer Butter Masala", "بانير بالزبدة ماسالا", 34, null],
   ]},
   { cat: "Biryani & Rice", icon: "🍚", items: [
-    ["Dum Biryani", "", 28, null],
-    ["Hyderabadi Chicken Dum Biryani", "", 28, null],
-    ["Chicken Tikka Biryani", "", 32, null],
+    ["Dum Biryani", "برياني دم", 28, null],
+    ["Hyderabadi Chicken Dum Biryani", "برياني حيدر آبادي بالدجاج", 28, null],
+    ["Chicken Tikka Biryani", "برياني تكا دجاج", 32, null],
   ]},
   { cat: "Rolls", icon: "🌯", items: [
     ["Chicken Tikka Chutney Roll", "رول دجاج تكا بالتشتني", 15, 450],
@@ -84,8 +84,8 @@ export const MENU: Section[] = [
     ["BBQ Malai Sandwich", "ساندويتش ماالي باربكيو", 16, 400],
     ["BBQ Reshmi Sandwich", "ساندويتش ريشمي مشوي", 16, 400],
     ["BBQ Bihari Sandwich", "ساندويتش بيهاري مشوي", 16, 400],
-    ["Chapli Sandwich", "", 16, null],
-    ["Malai Boti Sandwich", "", 16, null],
+    ["Chapli Sandwich", "ساندويتش تشابلي", 16, null],
+    ["Malai Boti Sandwich", "ساندويتش بوتي مالاي", 16, null],
   ]},
   { cat: "Breakfast", icon: "🍳", items: [
     ["Halwa Puri Platter", "صحن حلوة وبوري", 15, 400],
@@ -119,8 +119,8 @@ export const MENU: Section[] = [
     ["Shake Oreo", "هزة أوريو", 16, 350],
     ["Shake Snickers", "هزة سنيكرز", 16, 350],
     ["Shake Vanilla", "هزة الفانيليا", 16, 400],
-    ["Orange Juice", "", 10, null],
-    ["Pakola", "", 5, null],
+    ["Orange Juice", "عصير برتقال", 10, null],
+    ["Pakola", "باكولا", 5, null],
   ]},
   { cat: "Tacos", icon: "🌮", items: [
     ["Chicken Fajita Tacos (2pc)", "تاكو دجاج فاهيتا قطعتين", 20, 450],
