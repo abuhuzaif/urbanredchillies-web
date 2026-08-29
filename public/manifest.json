@@ -2,7 +2,7 @@
   "name": "RedChillies Menu",
   "short_name": "RedChillies",
   "description": "Urban Red Chillies — Dine-in Menu",
-  "start_url": "/menu",
+  "start_url": "/",
   "scope": "/",
   "display": "standalone",
   "orientation": "portrait",
