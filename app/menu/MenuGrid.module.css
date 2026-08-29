@@ -109,14 +109,18 @@
 
 .bottomRow{
   display:flex;
-  align-items:center;
+  align-items:flex-end;
   justify-content:space-between;
+  gap: 6px;
   margin-top: 10px;
 }
 .price{
   color: #4caf50;
   font-weight: 800;
-  font-size: .84rem;
+  font-size: .74rem;
+  line-height: 1.35;
+  flex: 1;
+  min-width: 0;
 }
 .plusBtn{
   width: 32px;

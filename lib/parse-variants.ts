@@ -26,10 +26,15 @@ export function parseVariants(
         };
       }
     }
+    const genericLabels: Record<number, string[]> = {
+      2: ["Regular", "Large"],
+      3: ["Small", "Medium", "Large"],
+    };
+    const labels2 = genericLabels[prices.length] ?? prices.map((_, i) => `Option ${i + 1}`);
     return {
       baseName: name,
       variants: prices.map((p, i) => ({
-        label: i === 0 ? "Regular" : "Large",
+        label: labels2[i],
         price: p,
       })),
     };
