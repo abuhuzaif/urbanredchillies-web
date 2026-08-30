@@ -1,18 +1,29 @@
-import { MENU } from "../../lib/menu-data";
+import { getLiveMenu, getAnnouncement } from "../../lib/live-menu";
 import { CartProvider } from "../../lib/cart-context";
 import MenuHeader from "./MenuHeader";
+import AnnouncementBanner from "./AnnouncementBanner";
 import MenuGrid from "./MenuGrid";
 import CartDrawer from "./CartDrawer";
 import styles from "./menu.module.css";
 
 export const metadata = { title: "RedChillies Menu" };
 
-export default function MenuPage() {
+// Always fetch fresh data from Supabase — owner-app changes should show up
+// immediately, not from a cached build.
+export const revalidate = 0;
+
+export default async function MenuPage() {
+  const [menu, announcement] = await Promise.all([
+    getLiveMenu(),
+    getAnnouncement(),
+  ]);
+
   return (
     <CartProvider>
       <div className={styles.appShell}>
         <MenuHeader />
-        <MenuGrid menu={MENU} />
+        <AnnouncementBanner announcement={announcement} />
+        <MenuGrid menu={menu} />
         <p className={styles.footNote}>Dine-in menu &middot; Prices in SAR &middot; Table number required at checkout</p>
       </div>
       <CartDrawer />
