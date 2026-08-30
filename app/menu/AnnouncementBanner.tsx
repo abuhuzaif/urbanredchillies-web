@@ -53,10 +53,10 @@ export default function AnnouncementBanner({
       <style jsx>{`
                 @keyframes redchillies-marquee {
           0% {
-            transform: translateX(-100%);
+            transform: translateX(100vw);
           }
           100% {
-            transform: translateX(100vw);
+            transform: translateX(-100%);
           }
         }
       `}</style>
