@@ -12,6 +12,7 @@ export type LiveItem = {
   variants: LiveVariant[];
   isTodayOffer: boolean;
   offerPrice: number | null;
+  isBestSeller: boolean;
 };
 
 export type LiveSection = {
@@ -81,7 +82,7 @@ export async function getLiveMenu(): Promise<LiveSection[]> {
   const { data: items, error: itemsErr } = await supabase
     .from("menu_items")
     .select(
-      "id, category_id, name, name_ar, price, image_url, has_variants, is_available, is_today_offer, offer_price, offer_start_date, offer_end_date"
+      "id, category_id, name, name_ar, price, image_url, has_variants, is_available, is_today_offer, offer_price, offer_start_date, offer_end_date, is_best_seller"
     )
     .eq("is_available", true)
     .order("name", { ascending: true });
@@ -136,6 +137,7 @@ export async function getLiveMenu(): Promise<LiveSection[]> {
           variants: itemVariants,
           isTodayOffer: effectiveIsTodayOffer,
           offerPrice: i.offer_price != null ? Number(i.offer_price) : null,
+          isBestSeller: (i.is_best_seller as boolean) ?? false,
         };
       });
 
