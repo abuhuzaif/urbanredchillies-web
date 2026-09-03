@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import styles from "./Navbar.module.css";
 
 const LINKS = [
@@ -12,6 +13,17 @@ const LINKS = [
 export default function Navbar() {
   return (
     <header className={styles.nav}>
+      <Link href="/" className={styles.logo}>
+        <Image
+          src="/urc-logo.png"
+          alt="Urban Red Chillies"
+          width={214}
+          height={100}
+          priority
+          className={styles.logoImg}
+        />
+      </Link>
+
       <nav className={styles.links}>
         {LINKS.map((l) => (
           <Link key={l.href} href={l.href}>
