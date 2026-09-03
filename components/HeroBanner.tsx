@@ -10,6 +10,7 @@ export default function HeroBanner() {
         width={1542}
         height={453}
         priority
+        unoptimized
         sizes="(max-width: 1400px) 100vw, 1400px"
         className={styles.bannerImg}
       />

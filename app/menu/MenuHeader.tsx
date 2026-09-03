@@ -16,6 +16,7 @@ export default function MenuHeader() {
             alt="Urban Red Chillies — House of Flavour Canada"
             fill
             priority
+            unoptimized
             sizes="(max-width: 900px) 100vw, 900px"
             className={styles.bannerImg}
           />
