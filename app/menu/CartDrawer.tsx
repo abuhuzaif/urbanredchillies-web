@@ -7,6 +7,14 @@ import { supabase } from "../../lib/supabase";
 import { buildZatcaTlvBase64, SELLER_NAME, SELLER_VAT_NUMBER } from "../../lib/zatca";
 import styles from "./CartDrawer.module.css";
 
+type OrderType = "dine_in" | "takeaway" | "cod";
+
+const ORDER_TYPE_LABELS: Record<OrderType, string> = {
+  dine_in: "Dine-In",
+  takeaway: "Takeaway",
+  cod: "Cash on Delivery",
+};
+
 type ConfirmedInvoice = {
   orderId: string;
   timestamp: string;
@@ -14,25 +22,103 @@ type ConfirmedInvoice = {
   vat: number;
   total: number;
   qrDataUrl: string;
+  orderType: OrderType;
   tableNumber: string;
   lines: { name: string; variant: string | null; quantity: number; unitPrice: number }[];
 };
 
 export default function CartDrawer() {
   const cart = useCart();
+  const [orderType, setOrderType] = useState<OrderType>("dine_in");
   const [tableNumber, setTableNumber] = useState("");
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
+  const [address, setAddress] = useState("");
+  const [deliveryLat, setDeliveryLat] = useState<number | null>(null);
+  const [deliveryLng, setDeliveryLng] = useState<number | null>(null);
+  const [locating, setLocating] = useState(false);
+  const [locationError, setLocationError] = useState<string | null>(null);
   const [placing, setPlacing] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [invoice, setInvoice] = useState<ConfirmedInvoice | null>(null);
 
   if (cart.itemCount === 0 && !cart.isOpen) return null;
 
+  function useMyLocation() {
+    if (!navigator.geolocation) {
+      setLocationError("Location isn't supported on this device. Please type your address.");
+      return;
+    }
+    setLocating(true);
+    setLocationError(null);
+    navigator.geolocation.getCurrentPosition(
+      async (pos) => {
+        const { latitude, longitude } = pos.coords;
+        setDeliveryLat(latitude);
+        setDeliveryLng(longitude);
+        try {
+          const res = await fetch(
+            `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&addressdetails=1`,
+            { headers: { Accept: "application/json" } }
+          );
+          const data = await res.json();
+          if (data?.display_name) {
+            setAddress(data.display_name);
+          } else {
+            setLocationError("Got your location, but couldn't find an address — please add details below.");
+          }
+        } catch {
+          setLocationError("Got your location, but couldn't look up the address — please add details below.");
+        } finally {
+          setLocating(false);
+        }
+      },
+      (err) => {
+        setLocating(false);
+        if (err.code === err.PERMISSION_DENIED) {
+          setLocationError("Location permission denied. Please type your address instead.");
+        } else {
+          setLocationError("Couldn't get your location. Please type your address instead.");
+        }
+      },
+      { enableHighAccuracy: true, timeout: 10000 }
+    );
+  }
+
+  function changeOrderType(type: OrderType) {
+    setOrderType(type);
+    setError(null);
+  }
+
   async function placeOrder() {
-    if (!tableNumber.trim()) {
+    // Validate based on the selected order type.
+    if (orderType === "dine_in" && !tableNumber.trim()) {
       setError("Please enter your table number.");
       return;
+    }
+    if (orderType === "takeaway") {
+      if (!name.trim()) {
+        setError("Please enter your name for pickup.");
+        return;
+      }
+      if (!phone.trim()) {
+        setError("Please enter your phone number so we can call you when it's ready.");
+        return;
+      }
+    }
+    if (orderType === "cod") {
+      if (!name.trim()) {
+        setError("Please enter your name.");
+        return;
+      }
+      if (!phone.trim()) {
+        setError("Please enter your phone number for delivery.");
+        return;
+      }
+      if (!address.trim()) {
+        setError("Please enter your delivery address.");
+        return;
+      }
     }
     setError(null);
     setPlacing(true);
@@ -49,14 +135,20 @@ export default function CartDrawer() {
     const vatAmount = Number(cart.vat.toFixed(2));
     const totalAmount = Number(cart.total.toFixed(2));
 
+    const fallbackName =
+      orderType === "dine_in" ? `Table ${tableNumber.trim()}` : ORDER_TYPE_LABELS[orderType];
+
     const { data, error: dbError } = await supabase
       .from("orders")
       .insert({
-        customer_name: name.trim() || `Table ${tableNumber.trim()}`,
+        customer_name: name.trim() || fallbackName,
         customer_phone: phone.trim() || null,
-        order_type: "dine_in",
+        customer_address: orderType === "cod" ? address.trim() : null,
+        delivery_lat: orderType === "cod" ? deliveryLat : null,
+        delivery_lng: orderType === "cod" ? deliveryLng : null,
+        order_type: orderType,
         order_source: "qr_menu",
-        table_number: tableNumber.trim(),
+        table_number: orderType === "dine_in" ? tableNumber.trim() : null,
         items,
         subtotal,
         vat_amount: vatAmount,
@@ -91,6 +183,7 @@ export default function CartDrawer() {
       vat: vatAmount,
       total: totalAmount,
       qrDataUrl,
+      orderType,
       tableNumber: tableNumber.trim(),
       lines: cart.lines.map((l) => ({
         name: l.name,
@@ -105,9 +198,14 @@ export default function CartDrawer() {
 
   function closeAndReset() {
     setInvoice(null);
+    setOrderType("dine_in");
     setTableNumber("");
     setName("");
     setPhone("");
+    setAddress("");
+    setDeliveryLat(null);
+    setDeliveryLng(null);
+    setLocationError(null);
     cart.setOpen(false);
   }
 
@@ -126,7 +224,11 @@ export default function CartDrawer() {
                 <div className={styles.invoiceHead}>
                   <div className={styles.checkIcon}>✅</div>
                   <h3>Order sent to the kitchen!</h3>
-                  <p className={styles.tableTag}>Table {invoice.tableNumber}</p>
+                  <p className={styles.tableTag}>
+                    {invoice.orderType === "dine_in"
+                      ? `Table ${invoice.tableNumber}`
+                      : ORDER_TYPE_LABELS[invoice.orderType]}
+                  </p>
                 </div>
 
                 <div className={styles.receipt}>
@@ -213,23 +315,87 @@ export default function CartDrawer() {
                       <div className={styles.grandTotal}><span>Total</span><span>{cart.total.toFixed(2)} SAR</span></div>
                     </div>
 
+                    <div className={styles.orderTypeTabs}>
+                      {(Object.keys(ORDER_TYPE_LABELS) as OrderType[]).map((type) => (
+                        <button
+                          key={type}
+                          type="button"
+                          className={`${styles.orderTypeTab} ${orderType === type ? styles.orderTypeTabActive : ""}`}
+                          onClick={() => changeOrderType(type)}
+                        >
+                          {ORDER_TYPE_LABELS[type]}
+                        </button>
+                      ))}
+                    </div>
+
                     <div className={styles.form}>
-                      <label>
-                        Table Number *
-                        <input
-                          value={tableNumber}
-                          onChange={(e) => setTableNumber(e.target.value)}
-                          placeholder="e.g. 5"
-                        />
-                      </label>
-                      <label>
-                        Name (optional)
-                        <input value={name} onChange={(e) => setName(e.target.value)} placeholder="Your name" />
-                      </label>
-                      <label>
-                        Phone (optional)
-                        <input value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="For order updates" />
-                      </label>
+                      {orderType === "dine_in" && (
+                        <>
+                          <label>
+                            Table Number *
+                            <input
+                              value={tableNumber}
+                              onChange={(e) => setTableNumber(e.target.value)}
+                              placeholder="e.g. 5"
+                            />
+                          </label>
+                          <label>
+                            Name (optional)
+                            <input value={name} onChange={(e) => setName(e.target.value)} placeholder="Your name" />
+                          </label>
+                          <label>
+                            Phone (optional)
+                            <input value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="For order updates" />
+                          </label>
+                        </>
+                      )}
+
+                      {orderType === "takeaway" && (
+                        <>
+                          <label>
+                            Name *
+                            <input value={name} onChange={(e) => setName(e.target.value)} placeholder="Your name" />
+                          </label>
+                          <label>
+                            Phone *
+                            <input value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="We'll call you when it's ready" />
+                          </label>
+                        </>
+                      )}
+
+                      {orderType === "cod" && (
+                        <>
+                          <label>
+                            Name *
+                            <input value={name} onChange={(e) => setName(e.target.value)} placeholder="Your name" />
+                          </label>
+                          <label>
+                            Phone *
+                            <input value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="For delivery updates" />
+                          </label>
+                          <label>
+                            Delivery Address *
+                            <div className={styles.addressRow}>
+                              <button
+                                type="button"
+                                className={styles.locateBtn}
+                                onClick={useMyLocation}
+                                disabled={locating}
+                              >
+                                {locating ? "Locating…" : "📍 Use My Location"}
+                              </button>
+                              {locationError && <span className={styles.locateError}>{locationError}</span>}
+                            </div>
+                            <textarea
+                              className={styles.addressInput}
+                              value={address}
+                              onChange={(e) => setAddress(e.target.value)}
+                              placeholder="Building, street, area, city — or tap 'Use My Location' above"
+                              rows={3}
+                            />
+                          </label>
+                        </>
+                      )}
                     </div>
 
                     {error && <div className={styles.error}>{error}</div>}
