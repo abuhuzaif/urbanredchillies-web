@@ -129,6 +129,7 @@ export default function CartDrawer() {
       variant: l.variant,
       quantity: l.quantity,
       unit_price: l.unitPrice,
+      total_price: Number((l.unitPrice * l.quantity).toFixed(2)),
     }));
 
     const subtotal = Number(cart.subtotal.toFixed(2));
