@@ -1,10 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import QRCode from "qrcode";
 import { useCart } from "../../lib/cart-context";
 import { supabase } from "../../lib/supabase";
-import { buildZatcaTlvBase64, SELLER_NAME, SELLER_VAT_NUMBER } from "../../lib/zatca";
+import { SELLER_NAME, SELLER_VAT_NUMBER } from "../../lib/zatca";
 import styles from "./CartDrawer.module.css";
 
 type OrderType = "dine_in" | "takeaway" | "cod";
@@ -21,7 +20,6 @@ type ConfirmedInvoice = {
   subtotal: number;
   vat: number;
   total: number;
-  qrDataUrl: string;
   orderType: OrderType;
   tableNumber: string;
   lines: { name: string; variant: string | null; quantity: number; unitPrice: number }[];
@@ -166,16 +164,6 @@ export default function CartDrawer() {
     }
 
     const timestamp = new Date().toISOString();
-    const tlvBase64 = buildZatcaTlvBase64({
-      timestamp,
-      totalWithVat: totalAmount,
-      vatAmount,
-    });
-    const qrDataUrl = await QRCode.toDataURL(tlvBase64, {
-      margin: 1,
-      width: 180,
-      color: { dark: "#1a0d05", light: "#f0b429" },
-    });
 
     setInvoice({
       orderId: data.id,
@@ -183,7 +171,6 @@ export default function CartDrawer() {
       subtotal,
       vat: vatAmount,
       total: totalAmount,
-      qrDataUrl,
       orderType,
       tableNumber: tableNumber.trim(),
       lines: cart.lines.map((l) => ({
@@ -224,6 +211,7 @@ export default function CartDrawer() {
               <div className={styles.invoice}>
                 <div className={styles.invoiceHead}>
                   <div className={styles.checkIcon}>✅</div>
+                  <p className={styles.kotTag}>*** KOT ONLY ***</p>
                   <h3>Order sent to the kitchen!</h3>
                   <p className={styles.tableTag}>
                     {invoice.orderType === "dine_in"
@@ -235,6 +223,8 @@ export default function CartDrawer() {
                 <div className={styles.receipt}>
                   <div className={styles.receiptBrand}>{SELLER_NAME}</div>
                   <div className={styles.receiptMeta}>
+                    VAT Reg. No: {SELLER_VAT_NUMBER}
+                    <br />
                     Order #{invoice.orderId.slice(0, 8).toUpperCase()}
                     <br />
                     {new Date(invoice.timestamp).toLocaleString()}
@@ -264,10 +254,9 @@ export default function CartDrawer() {
 
                   <div className={styles.receiptDash} />
 
-                  <div className={styles.qrBlock}>
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={invoice.qrDataUrl} alt="ZATCA simplified tax invoice QR" />
-                    <p>Simplified Tax Invoice &middot; VAT {SELLER_VAT_NUMBER}</p>
+                  <div className={styles.thankYou}>
+                    <p className={styles.thankYouMain}>Please pay at the counter</p>
+                    <p className={styles.thankYouMain}>يرجى الدفع عند الكاشير</p>
                   </div>
 
                   <div className={styles.receiptDash} />
@@ -334,11 +323,19 @@ export default function CartDrawer() {
                         <>
                           <label>
                             Table Number *
-                            <input
+                            <select
                               value={tableNumber}
                               onChange={(e) => setTableNumber(e.target.value)}
-                              placeholder="e.g. 5"
-                            />
+                            >
+                              <option value="" disabled>
+                                Select your table
+                              </option>
+                              {Array.from({ length: 25 }, (_, i) => `RC-${i + 1}`).map((t) => (
+                                <option key={t} value={t}>
+                                  {t}
+                                </option>
+                              ))}
+                            </select>
                           </label>
                           <label>
                             Name (optional)
