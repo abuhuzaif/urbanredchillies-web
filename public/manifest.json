@@ -1,13 +1,16 @@
 {
+  "id": "/",
   "name": "RedChillies Menu",
   "short_name": "RedChillies",
   "description": "Urban Red Chillies — Dine-in Menu",
-  "start_url": "/",
+  "start_url": "/menu",
   "scope": "/",
   "display": "standalone",
   "orientation": "portrait",
   "background_color": "#0a1a10",
   "theme_color": "#0a3219",
+  "lang": "en",
+  "categories": ["food", "restaurant"],
   "icons": [
     {
       "src": "/icon-192.png",
