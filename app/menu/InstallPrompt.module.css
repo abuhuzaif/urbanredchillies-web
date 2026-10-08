@@ -1,0 +1,66 @@
+.banner{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  max-width: 1180px;
+  margin: 10px 12px 0;
+  padding: 10px 10px 10px 14px;
+  background: #111;
+  border: 1px solid rgba(240,180,41,.4);
+  border-radius: 14px;
+  color: #f4e4c1;
+}
+
+@media (min-width: 1204px){
+  .banner{ margin: 10px auto 0; }
+}
+
+.text{
+  flex: 1;
+  min-width: 0;
+  font-size: .8rem;
+  line-height: 1.4;
+}
+
+.title{
+  display: block;
+  color: #fff;
+  font-weight: 800;
+  font-size: .88rem;
+  margin-bottom: 1px;
+}
+
+.ar{
+  display: block;
+  margin-top: 2px;
+  color: #b9ab98;
+  font-size: .76rem;
+}
+
+.shareIcon{
+  display: inline-block;
+  color: #f0b429;
+  font-weight: 800;
+}
+
+.installBtn{
+  flex-shrink: 0;
+  background: #c8102e;
+  color: #fff;
+  border: none;
+  border-radius: 999px;
+  padding: 10px 18px;
+  font-weight: 800;
+  font-size: .82rem;
+  cursor: pointer;
+}
+
+.close{
+  flex-shrink: 0;
+  background: none;
+  border: none;
+  color: #b9ab98;
+  font-size: 1.05rem;
+  padding: 6px 8px;
+  cursor: pointer;
+}

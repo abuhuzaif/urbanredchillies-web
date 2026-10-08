@@ -126,6 +126,18 @@ export default function MenuGrid({ menu }: { menu: LiveSection[] }) {
                           SAR {formatPrice(item.price as number)}
                         </span>
                       )}
+                      {(hasVariants || singlePrice != null) && (
+                        <span
+                          style={{
+                            display: "block",
+                            fontSize: 10,
+                            fontWeight: 500,
+                            color: "rgba(255,255,255,0.45)",
+                          }}
+                        >
+                          incl. VAT
+                        </span>
+                      )}
                     </span>
 
                     {!hasVariants && singlePrice == null ? (
@@ -167,6 +179,16 @@ export default function MenuGrid({ menu }: { menu: LiveSection[] }) {
 
                   {hasMultipleVariants && openVariantKey === cardKey && (
                     <div className={styles.variantSheet}>
+                      <div
+                        style={{
+                          fontSize: 10,
+                          color: "rgba(255,255,255,0.45)",
+                          textAlign: "center",
+                          paddingBottom: 4,
+                        }}
+                      >
+                        Prices include 15% VAT
+                      </div>
                       {item.variants.map((v) => (
                         <button
                           key={v.id}

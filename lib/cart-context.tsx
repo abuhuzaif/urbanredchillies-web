@@ -17,9 +17,9 @@ type CartContextType = {
   updateQty: (key: string, qty: number) => void;
   removeItem: (key: string) => void;
   clearCart: () => void;
-  subtotal: number;
-  vat: number;
-  total: number;
+  subtotal: number; // amount excluding VAT
+  vat: number; // VAT portion already included in the menu prices
+  total: number; // what the customer pays = sum of menu prices
   itemCount: number;
   isOpen: boolean;
   setOpen: (v: boolean) => void;
@@ -28,6 +28,8 @@ type CartContextType = {
 const CartContext = createContext<CartContextType | null>(null);
 
 const VAT_RATE = 0.15; // ZATCA — 15% VAT
+
+const round2 = (n: number) => Math.round((n + Number.EPSILON) * 100) / 100;
 
 export function CartProvider({ children }: { children: ReactNode }) {
   const [lines, setLines] = useState<CartLine[]>([]);
@@ -66,9 +68,12 @@ export function CartProvider({ children }: { children: ReactNode }) {
     setLines([]);
   }
 
-  const subtotal = lines.reduce((s, l) => s + l.unitPrice * l.quantity, 0);
-  const vat = subtotal * VAT_RATE;
-  const total = subtotal + vat;
+  // Menu prices already INCLUDE 15% VAT, so VAT is never added on top.
+  // total = sum of menu prices; VAT is extracted from it (total * 15 / 115);
+  // subtotal = total - VAT. e.g. 25.00 -> VAT 3.26, subtotal 21.74.
+  const total = round2(lines.reduce((s, l) => s + l.unitPrice * l.quantity, 0));
+  const vat = round2((total * VAT_RATE) / (1 + VAT_RATE));
+  const subtotal = round2(total - vat);
   const itemCount = lines.reduce((s, l) => s + l.quantity, 0);
 
   return (
