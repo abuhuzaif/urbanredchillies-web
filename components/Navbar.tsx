@@ -12,28 +12,36 @@ const LINKS = [
 
 export default function Navbar() {
   return (
-    <header className={styles.nav}>
-      <Link href="/" className={styles.logo}>
-        <Image
-          src="/urc-logo.png"
-          alt="Urban Red Chillies"
-          width={214}
-          height={100}
-          priority
-          className={styles.logoImg}
-        />
-      </Link>
+    <>
+      {/* The navbar below is position: fixed (it stays at the top while the
+          page scrolls), so it no longer takes up space in the page flow.
+          This invisible spacer reserves the same height so the first
+          section isn't hidden behind it. */}
+      <div className={styles.spacer} aria-hidden="true" />
 
-      <nav className={styles.links}>
-        {LINKS.map((l) => (
-          <Link key={l.href} href={l.href}>
-            {l.label}
-          </Link>
-        ))}
-      </nav>
-      <Link href="/menu" className={styles.cta}>
-        Order Now
-      </Link>
-    </header>
+      <header className={styles.nav}>
+        <Link href="/" className={styles.logo}>
+          <Image
+            src="/urc-logo.png"
+            alt="Urban Red Chillies"
+            width={214}
+            height={100}
+            priority
+            className={styles.logoImg}
+          />
+        </Link>
+
+        <nav className={styles.links}>
+          {LINKS.map((l) => (
+            <Link key={l.href} href={l.href}>
+              {l.label}
+            </Link>
+          ))}
+        </nav>
+        <Link href="/menu" className={styles.cta}>
+          Order Now
+        </Link>
+      </header>
+    </>
   );
 }
